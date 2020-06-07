@@ -15,7 +15,7 @@ const songs = [
   "rock_you_like_a_hurricane",
   "youth_gone_wild",
 ];
-
+audio.volume = 0.1;
 // Keep track of song
 let songIndex = 3;
 
@@ -57,6 +57,7 @@ function prevSong() {
   loadSong(songs[songIndex]);
   playSong();
 }
+
 // Next song
 function nextSong() {
   songIndex++;
@@ -66,6 +67,21 @@ function nextSong() {
 
   loadSong(songs[songIndex]);
   playSong();
+}
+
+// Update progress bar
+function updateProgress(e) {
+  const { duration, currentTime } = e.srcElement;
+  const progressPercent = (currentTime / duration) * 100;
+  progress.style.width = `${progressPercent}%`;
+}
+
+// Set progress bar
+function setProgress(e) {
+  const width = this.clientWidth;
+  const clickX = e.offsetX;
+  const duration = audio.duration;
+  audio.currentTime = (clickX / width) * duration;
 }
 
 // Event listeners
@@ -82,3 +98,9 @@ playBtn.addEventListener("click", () => {
 // Change song
 prevBtn.addEventListener("click", prevSong);
 nextBtn.addEventListener("click", nextSong);
+
+// Time song update event
+audio.addEventListener("timeupdate", updateProgress);
+
+// Click on progress bar
+progressContainer.addEventListener("click", setProgress);
